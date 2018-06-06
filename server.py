@@ -55,8 +55,14 @@ class Handler(BaseHTTPRequestHandler):
         self.set_cors();
 
     def do_POST(self):
+        print("post: ", self.path)
+        if self.path == '/pix2pix':
+            self.do_pix2pix()
+        else:
+            print("unexpected path")
+        return
 
-        print("post")
+    def do_pix2pix(self):
         data_string = self.rfile.read(int(self.headers['Content-Length']))
         bgr_img = cv2.imdecode(np.fromstring(data_string, dtype=np.uint8), 1)
         rgb_img = bgr_img[:, :, ::-1]
@@ -68,11 +74,11 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(cv2.imencode('.png', translated_bgr)[1].tostring())
         Image.fromarray(translated_rgb).save("translated.png")
-        return
 
 def run(port):
     server_address = ('', port)
     httpd = HTTPServer(server_address, Handler)
+    print('staring server...')
     httpd.serve_forever()
     print('httpd running...')
     sys.stdout.flush()

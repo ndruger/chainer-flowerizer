@@ -84,9 +84,7 @@
 
     <script>
       $(() => {
-        const PIX2PIX_HOST = 'http://localhost:8000';
-        const STYLE_HOST = 'http://localhost:8080';
-        const MODEL = 'flower1';
+        const API_HOST = 'http://localhost:8000';
         const SIZE = 256;
 
         $.fn.wPaint.extend({
@@ -166,7 +164,7 @@
               }
             }
           }
-          xhr.open('post', PIX2PIX_HOST + '/' + MODEL, true);
+          xhr.open('post', API_HOST + '/pix2pix', true);
           xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
           xhr.send(canvasData);
         });
@@ -186,7 +184,7 @@
               }
             }
           }
-          xhr.open('post', STYLE_HOST + '/' + MODEL, true);
+          xhr.open('post', API_HOST + '/styled', true);
           xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
           xhr.send(translatedBin);
         });
