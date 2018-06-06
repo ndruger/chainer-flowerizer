@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import socketserver
 
 import chainer
-from chainer import serializers
+from chainer import serializers, cuda
 
 from pix2pix.model import Generator as Pix2pixGenerator
 from pix2pix.utils import data_process as pix2pix_data_process, output2img as pix2pix_output2img
@@ -33,6 +33,9 @@ if args.gpu >= 0:
     chainer.cuda.get_device(args.gpu).use()
     pix2pixG.to_gpu()
     styleTrans.to_gpu()
+    xp = cuda.cupy
+else:
+    xp = np
 
 img_shape = (256, 256, 3)
 
@@ -61,7 +64,7 @@ def style_translate(img):
     img_a = np.asarray(img, dtype=np.float32)
     img_a = np.transpose(img_a, (2, 0, 1))
     with chainer.using_config('train', False):
-        A = chainer.cuda.to_cpu(styleTrans(np.asarray([img_a])).data)
+        A = chainer.cuda.to_cpu(styleTrans(xp.asarray([img_a])).data)
     translated_a = np.asarray(np.transpose(A[0], [1, 2, 0]) + np.array([103.939, 116.779, 123.68]), dtype=np.uint8)
     translated_a = original_colors(img, translated_a)
     print("style end at ", datetime.datetime.now() - start)
