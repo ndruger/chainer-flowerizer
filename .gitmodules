@@ -1,6 +1,6 @@
 [submodule "chainer-pix2pix"]
-	path = chainer-pix2pix
+	path = pix2pix
 	url = git@github.com:ndruger/chainer-pix2pix.git
 [submodule "chainer-neural-style"]
-	path = chainer-neural-style
+	path = neural_style
 	url = git@github.com:ndruger/chainer-neural-style.git
