@@ -37,11 +37,11 @@ def translate(img):
     img_a = np.asarray(img, dtype=np.float32)
     img_a = np.transpose(img_a, (2, 0, 1))
     A = data_process([img_a], device=args.gpu)
-    # with chainer.using_config('train', False):
-    translated_a = np.squeeze(output2img(G(A)))
+    # with chainer.using_config('train', False): # TODO: activate.
+    with chainer.using_config('enable_backprop', False):
+        translated_a = np.squeeze(output2img(G(A)))
     print("translation end at ", datetime.datetime.now() - start)
     return translated_a
-    # return Image.fromarray(translated_a)
 
 class Handler(BaseHTTPRequestHandler):
     def set_cors(self):
@@ -55,9 +55,8 @@ class Handler(BaseHTTPRequestHandler):
         self.set_cors();
 
     def do_POST(self):
-        global n
-        print("neko")
-        print("post!!")
+
+        print("post")
         data_string = self.rfile.read(int(self.headers['Content-Length']))
         bgr_img = cv2.imdecode(np.fromstring(data_string, dtype=np.uint8), 1)
         rgb_img = bgr_img[:, :, ::-1]
