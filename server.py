@@ -60,7 +60,8 @@ def style_translate(img):
     print("style start")
     img_a = np.asarray(img, dtype=np.float32)
     img_a = np.transpose(img_a, (2, 0, 1))
-    A = chainer.cuda.to_cpu(styleTrans(np.asarray([img_a])).data)
+    with chainer.using_config('train', False):
+        A = chainer.cuda.to_cpu(styleTrans(np.asarray([img_a])).data)
     translated_a = np.asarray(np.transpose(A[0], [1, 2, 0]) + np.array([103.939, 116.779, 123.68]), dtype=np.uint8)
     translated_a = original_colors(img, translated_a)
     print("style end at ", datetime.datetime.now() - start)

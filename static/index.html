@@ -84,7 +84,7 @@
 
     <script>
       $(() => {
-        const API_HOST = 'http://localhost:8000';
+        const API_HOST = location.search.includes('use_local_host') ? 'http://localhost:8000' : localStorage.getItem('chainer-flowerizer-server');
         const SIZE = 256;
 
         $.fn.wPaint.extend({
