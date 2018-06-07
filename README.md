@@ -1,7 +1,7 @@
-# chainer-flowerizer
+# Chainer Flowerizer
 
 
-## 利用画像の著作権
+## Copylight of Images
 
-- 背景画像: [砂漠あらかるた](http://sabakaruta.com/materials.html)
-- 額縁画像: [写真AC](https://www.photo-ac.com/main/detail/234461)
+- background image: [砂漠あらかるた](http://sabakaruta.com/materials.html)
+- border image: [写真AC](https://www.photo-ac.com/main/detail/234461)
