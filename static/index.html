@@ -43,15 +43,25 @@
         flex-direction: row;
         justify-content: space-evenly;
       }
-      .translated-img,
-      .style-translated-img {
-        border: 1px solid;
+      .pix2pix-img,
+      .translated-img {
+        /*border: 1px solid;*/
         width: 256px;
         height: 256px;
       }
       .original-img,
-      .translated-img,
-      .style-translated-img {
+      .pix2pix-img {
+/*        margin: 20px;
+        background-color: white;
+        /*border: 1px solid black;*/
+        border: 0;
+*/
+        background-color: white;
+        border-image: url(./images/simple_border.png) 14 round;
+        border-width: 20px;
+        border-style: solid;
+      }
+      .translated-img {
         background-color: white;
         border-image: url(./images/border.png) 16 round;
         border-width: 20px;
@@ -117,13 +127,13 @@
           <button class="translate-button">Flowerize<br>&gt;</button>
         </div>
         <div class="item">
-          <img class="translated-img">
+          <img class="pix2pix-img">
         </div>
         <div class="item">
           <button class="translate-style-button">Goghize<br>&gt;</button>
         </div>
         <div class="item">
-          <img class="style-translated-img">
+          <img class="translated-img">
         </div>
       </div>
 
@@ -232,7 +242,7 @@
                   const base64 = bin_to_base64(bin);
                   const output = new Image();
                   const dataUrl = `data:image/png;base64,${base64}`;
-                  const img = $('.translated-img').attr('src', dataUrl);
+                  const img = $('.pix2pix-img').attr('src', dataUrl);
                 }
               }
             }
@@ -252,7 +262,7 @@
                   const base64 = bin_to_base64(bin);
                   const output = new Image();
                   const dataUrl = `data:image/png;base64,${base64}`;
-                  const img = $('.style-translated-img').attr('src', dataUrl);
+                  const img = $('.translated-img').attr('src', dataUrl);
                 }
               }
             }
