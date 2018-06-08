@@ -167,7 +167,8 @@
         $(() => {
           const API_HOST = location.search.includes('use_local_host') ? 'http://localhost:8000' : localStorage.getItem('chainer-flowerizer-server');
           const SIZE = 256;
-          const VISIBLE_BG_COLOR = '';
+          const VISUAL_BG_COLOR = 0xffffff; // rgb white
+          const BG_COLOR = 0x0000ff; // rbg
 
           $.fn.wPaint.extend({
             clear: () => {
@@ -198,7 +199,7 @@
             const canvas = $('#wpaint .wPaint-canvas')[0];
             const ctx = canvas.getContext('2d');
             const old = ctx.fillStyle;
-            ctx.fillStyle = 'blue';
+            ctx.fillStyle = color_hex_to_s(VISUAL_BG_COLOR);
             ctx.fillRect(0, 0, SIZE, SIZE);
             ctx.fillStyle = old;
           }
@@ -219,21 +220,41 @@
             return btoa(charas)
           }
 
+          function color_hex_to_s(h) {
+            const r = (VISUAL_BG_COLOR & 0xff0000) >> 16;
+            const g = (VISUAL_BG_COLOR & 0x00ff00) >> 8;
+            const b = (VISUAL_BG_COLOR & 0x0000ff);
+            return `rgb(${r}, ${g}, ${b})`;
+          }
+
+          function isVisualBgColor(r, g, b) {
+            return (VISUAL_BG_COLOR & 0xff0000) >> 16 === r &&
+                  (VISUAL_BG_COLOR & 0x00ff00) >> 8 === g &&
+                  (VISUAL_BG_COLOR & 0x0000ff) === b;
+          }
+
           function fixVisualBgColor(canvas, ctx, w, h) {
             const imageData = ctx.getImageData(0, 0, w, h);
-            const a = new Uint32Array(imageData.data.buffer);
-            console.log(a[0]);
-            const newArray = new Uint8Array(4 * IMG_HEIGHT * IMG_WIDTH);
-            // for (let i = 0; i < a.length; i++) { // origArray has doube length of pixel.
-            //   // const orig = origArray[i * 2];
-            //   const orig = origArray[i];
-            //   const temp = (orig / 256.0) - 50.0;
-            //   const tempColor = computeColorFromTemperature(temp, tm);
-            //   newArray[i * 4] = tempColor.r;
-            //   newArray[i * 4 + 1] = tempColor.g;
-            //   newArray[i * 4 + 2] = tempColor.b;
-            //   newArray[i * 4 + 3] = 255;
-            // }
+            const orig = new Uint8Array(imageData.data.buffer);
+            const newArray = new Uint8Array(4 * w * h);
+            for (let i = 0; i < orig.length / 4; i++) {
+              const base = i * 4;
+              const r = orig[base + 0];
+              const g = orig[base + 1];
+              const b = orig[base + 2];
+              if (isVisualBgColor(r, g, b)) {
+                newArray[base + 0] = (BG_COLOR & 0xff0000) >> 16
+                newArray[base + 1] = (BG_COLOR & 0x00ff00) >> 8
+                newArray[base + 2] = (BG_COLOR & 0x0000ff);
+              } else {
+                newArray[base + 0] = r;
+                newArray[base + 1] = g;
+                newArray[base + 2] = b;
+              }
+              newArray[base + 3] = 255;
+            }
+            imageData.data.set(newArray);
+            ctx.putImageData(imageData, 0, 0);
           }
 
           function toBinDataUrlWithCrop(canvas, x, y, w, h) {
@@ -243,7 +264,7 @@
             tmp_canvas.width = w;
             tmp_canvas.height = h;
             ctx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
-            // fixVisualBgColor(tmp_canvas, ctx, w, h);
+            fixVisualBgColor(tmp_canvas, ctx, w, h);
             const base64 = tmp_canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '')
             return base64_to_bin(base64);
           }
