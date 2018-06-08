@@ -97,17 +97,20 @@
       }
       .wColorPicker-holder {
       }
-      /* 13: red, 15: green, 19: yellow */
+      /* 11: white, 13: red, 15: green, 19: yellow */
       .wColorPicker-palette-simple > .wColorPicker-palette-color:nth-child(1),
       .wColorPicker-palette-simple > .wColorPicker-palette-color:nth-child(3),
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(5),
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(7),
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(9),
-      .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(11),
+      .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(17), /* blue */
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(21),
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(23) {
         height: 0px !important;
         border-width: 1px 0 0 0;
+      }
+      button:hover {
+        cursor: pointer;
       }
     </style>
   </head>
@@ -272,6 +275,7 @@
           let translatedBin;
 
           $('.translate-button').click(() => {
+            $('.translate-button').prop('disabled', true);
             const $canvas = $('#wpaint .wPaint-canvas');
             const canvasData = toBinDataUrlWithCrop($canvas[0], 0, 0, SIZE, SIZE);
 
@@ -280,6 +284,7 @@
             xhr.responseType = 'arraybuffer';
             xhr.onreadystatechange = () => {
               if (xhr.readyState == 4) {
+                $('.translate-button').prop('disabled', false);
                 if (xhr.status == 200) {
                   const bin = new Uint8Array(xhr.response)
                   translatedBin = bin
@@ -296,11 +301,13 @@
           });
 
           $('.translate-style-button').click(() => {
+            $('.translate-style-button').prop('disabled', true);
             // use xhr for binary data
             var xhr = new XMLHttpRequest();
             xhr.responseType = 'arraybuffer';
             xhr.onreadystatechange = () => {
               if (xhr.readyState == 4) {
+                $('.translate-style-button').prop('disabled', false);
                 if (xhr.status == 200) {
                   const bin = new Uint8Array(xhr.response)
                   const base64 = bin_to_base64(bin);
