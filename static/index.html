@@ -8,6 +8,7 @@
         background-image: url(./images/bg.jpg);
         background-repeat: no-repeat;
         background-size: 100% 100%;
+        font-style: italic;
       }
       .body-bg {
         top: 0px;
@@ -21,13 +22,16 @@
       }
       .body-fg {
       }
+      .title {
+        font-weight: bold;
+        text-align: center;
+      }
       .footer {
         position: absolute;
         bottom: 0;
         width: 100%;
         height: 30px;
         text-align: center;
-        font-size: 1em;
         font-weight: bold;
       }
       #wpaint {
@@ -45,17 +49,11 @@
       }
       .pix2pix-img,
       .translated-img {
-        /*border: 1px solid;*/
         width: 256px;
         height: 256px;
       }
       .original-img,
       .pix2pix-img {
-/*        margin: 20px;
-        background-color: white;
-        /*border: 1px solid black;*/
-        border: 0;
-*/
         background-color: white;
         border-image: url(./images/simple_border.png) 14 round;
         border-width: 20px;
@@ -69,9 +67,10 @@
       }
       .translate-button,
       .translate-style-button {
-        margin-top: 70px;
+        margin-top: 90px;
         height: 100px;
         font-size: 20px;
+        line-height: 26px;
       }
       .wPaint-menu-icon-name-ellipse,
       .wPaint-menu-icon-name-rectangle,
@@ -107,7 +106,6 @@
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(11),
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(21),
       .wColorPicker-palette-simple .wColorPicker-palette-color:nth-child(23) {
-        /*display: none !important;*/
         height: 0px !important;
         border-width: 1px 0 0 0;
       }
@@ -124,13 +122,19 @@
           <center id="wpaint-img"></center>
         </div>
         <div class="item">
-          <button class="translate-button">Flowerize<br>&gt;</button>
+          <button class="translate-button">
+            <div>Flowerize</div>
+            <div>→</div>
+          </button>
         </div>
         <div class="item">
           <img class="pix2pix-img">
         </div>
         <div class="item">
-          <button class="translate-style-button">Goghize<br>&gt;</button>
+          <button class="translate-style-button">
+            <div>Goghize</div>
+            <div>→</div>
+          </button>
         </div>
         <div class="item">
           <img class="translated-img">
@@ -163,6 +167,7 @@
         $(() => {
           const API_HOST = location.search.includes('use_local_host') ? 'http://localhost:8000' : localStorage.getItem('chainer-flowerizer-server');
           const SIZE = 256;
+          const VISIBLE_BG_COLOR = '';
 
           $.fn.wPaint.extend({
             clear: () => {
@@ -214,6 +219,23 @@
             return btoa(charas)
           }
 
+          function fixVisualBgColor(canvas, ctx, w, h) {
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const a = new Uint32Array(imageData.data.buffer);
+            console.log(a[0]);
+            const newArray = new Uint8Array(4 * IMG_HEIGHT * IMG_WIDTH);
+            // for (let i = 0; i < a.length; i++) { // origArray has doube length of pixel.
+            //   // const orig = origArray[i * 2];
+            //   const orig = origArray[i];
+            //   const temp = (orig / 256.0) - 50.0;
+            //   const tempColor = computeColorFromTemperature(temp, tm);
+            //   newArray[i * 4] = tempColor.r;
+            //   newArray[i * 4 + 1] = tempColor.g;
+            //   newArray[i * 4 + 2] = tempColor.b;
+            //   newArray[i * 4 + 3] = 255;
+            // }
+          }
+
           function toBinDataUrlWithCrop(canvas, x, y, w, h) {
             // temporary canvas for crop
             var tmp_canvas = document.createElement('canvas');
@@ -221,6 +243,7 @@
             tmp_canvas.width = w;
             tmp_canvas.height = h;
             ctx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+            // fixVisualBgColor(tmp_canvas, ctx, w, h);
             const base64 = tmp_canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '')
             return base64_to_bin(base64);
           }
