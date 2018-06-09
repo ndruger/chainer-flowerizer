@@ -2,9 +2,11 @@
 
 ## Demo Site
 
+http://s3-ap-northeast-1.amazonaws.com/chainer-flowerizer/index.html
+
 ## Usage
 
-TODO; write
+TODO: write here
 
 ## Copylight of Images
 

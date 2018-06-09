@@ -1,5 +1,4 @@
 import sys
-# sys.path.append('./chainer-neural-style')
 import datetime
 import numpy as np, pdb, os, cv2, argparse
 from PIL import Image
@@ -14,7 +13,6 @@ from pix2pix.model import Generator as Pix2pixGenerator
 from pix2pix.utils import data_process as pix2pix_data_process, output2img as pix2pix_output2img
 
 from neural_style.model import ImageTransformer
-# from neural_style.utils import im_deprocess_vgg as style_im_deprocess_vgg
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--port', default=8080, type=int)
