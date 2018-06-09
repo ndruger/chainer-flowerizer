@@ -168,9 +168,9 @@
       <script type="text/javascript" src="./vendor/wPaint/plugins/shapes/wPaint.menu.main.shapes.min.js"></script>
       <script type="text/javascript" src="./vendor/wPaint/plugins/file/wPaint.menu.main.file.min.js"></script>
 
+      <script type="text/javascript" src="config.js"></script>
       <script>
         $(() => {
-          const API_HOST = location.search.includes('use_local_host') ? 'http://localhost:8000' : localStorage.getItem('chainer-flowerizer-server');
           const SIZE = 256;
           const VISUAL_BG_COLOR = 0xffffff; // rgb white
           const BG_COLOR = 0x0000ff; // rbg
@@ -190,7 +190,7 @@
             strokeStyle: '#ffff00',
             path: './vendor/wPaint/',
           });
-          // make A and B same color 
+          // make A and B same color
           setInterval(() => {
             const options = window.wsPaintInstance.data('wPaint').options;
             options.strokeStyle = options.fillStyle;
@@ -297,7 +297,7 @@
                 }
               }
             }
-            xhr.open('post', API_HOST + '/pix2pix', true);
+            xhr.open('post', config.apiHost + '/pix2pix', true);
             xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
             xhr.send(canvasData);
           });
@@ -319,7 +319,7 @@
                 }
               }
             }
-            xhr.open('post', API_HOST + '/styled', true);
+            xhr.open('post', config.apiHost + '/styled', true);
             xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
             xhr.send(translatedBin);
           });
